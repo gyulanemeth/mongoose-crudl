@@ -1,0 +1,60 @@
+{
+  "name": "mongoose-crudl",
+  "version": "0.0.1",
+  "description": "CRUDL operations with Mongoose. (Create, Read, Update, Delete, List)",
+  "type": "module",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gyulanemeth/mongoose-crudl.git"
+  },
+  "keywords": [
+    "mongoose",
+    "crud",
+    "crudl",
+    "create",
+    "read",
+    "update",
+    "delete",
+    "list",
+    "rest",
+    "restful"
+  ],
+  "bugs": {
+    "url": "https://github.com/gyulanemeth/mongoose-crudl/issues"
+  },
+  "homepage": "https://github.com/gyulanemeth/mongoose-crudl#readme",
+  "scripts": {
+    "lint": "npx standard",
+    "lint-fix": "npx standard --fix",
+    "test": "npm run lint && node --experimental-vm-modules node_modules/jest/bin/jest.js --collect-coverage",
+    "test-brk": "node --inspect-brk --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-node",
+    "transform": {},
+    "verbose": true,
+    "testTimeout": 5000,
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "mongoose": "^6.3.0",
+    "mongoose-memory": "^0.0.2",
+    "standard": "^16.0.4"
+  },
+  "author": "GYN",
+  "license": "MIT"
+}
