@@ -10,7 +10,7 @@ const TestModel = mongoose.model('Test', new mongoose.Schema({
   refId: { type: mongoose.Types.ObjectId, required: false }
 }, { timestamps: true }))
 
-describe('removeOne', () => {
+describe('deleteOne', () => {
   beforeAll(async () => {
     await mongooseMemoryServer.start()
     await mongooseMemoryServer.connect('test-db')

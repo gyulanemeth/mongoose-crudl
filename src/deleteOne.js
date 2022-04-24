@@ -11,7 +11,7 @@ export default async function deleteOne (Model, params) {
     throw new NotFoundError(Model, filter)
   }
 
-  const result = await Model.findOneAndRemove({ _id, ...paramsCopy })
+  const result = await Model.findOneAndRemove(filter)
 
   return {
     status: 200,
