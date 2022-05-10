@@ -81,4 +81,20 @@ describe('readOne', () => {
       }
     })
   })
+
+  test('Success by params with select', async () => {
+    const refId = new mongoose.Types.ObjectId()
+    const test = new TestModel({ name: 'test', refId })
+    await test.save()
+
+    const res = await readOne(TestModel, { refId, id: test._id }, { select: { updatedAt: 1 } })
+
+    expect(res).toEqual({
+      status: 200,
+      result: {
+        _id: test._id,
+        updatedAt: test.updatedAt
+      }
+    })
+  })
 })

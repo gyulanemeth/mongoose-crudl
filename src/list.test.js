@@ -235,4 +235,51 @@ describe('list', () => {
       }
     })
   })
+
+  test('filter & sort with skip & limit & select', async () => {
+    const refId = new mongoose.Types.ObjectId()
+    const refId2 = new mongoose.Types.ObjectId()
+    const test = new TestModel({ name: 'Apple', refId })
+    await test.save()
+
+    const test2 = new TestModel({ name: 'appLe', refId2 })
+    await test2.save()
+
+    const test3 = new TestModel({ name: 'Apple and Pear', refId })
+    await test3.save()
+
+    const test4 = new TestModel({ name: 'Pear and APPLE', refId })
+    await test4.save()
+
+    const test5 = new TestModel({ name: 'Carrot', refId })
+    await test5.save()
+
+    const test6 = new TestModel({ name: 'app pear le', refId })
+    await test6.save()
+
+    const res = await list(TestModel, { refId }, {
+      filter: { name: { $regex: 'pear', $options: 'gi' } },
+      select: { updatedAt: 1 },
+      sort: { createdAt: 1 },
+      limit: 2,
+      skip: 1
+    })
+
+    expect(res).toEqual({
+      status: 200,
+      result: {
+        items: [
+          {
+            _id: test4._id,
+            updatedAt: test4.updatedAt
+          },
+          {
+            _id: test6._id,
+            updatedAt: test6.updatedAt
+          }
+        ],
+        count: 3
+      }
+    })
+  })
 })

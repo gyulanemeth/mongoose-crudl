@@ -1,9 +1,9 @@
 export default async function list (Model, params = {}, query = {}) {
   const filter = query.filter || {}
   const select = query.select || {}
+  const sort = query.sort || { createdAt: -1 }
   let skip = query.skip || 0
   let limit = query.limit || 10
-  const sort = query.sort || { createdAt: -1 }
 
   Object.assign(filter, params)
 
