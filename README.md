@@ -182,7 +182,7 @@ Side note: The `params` object should contain an `id` field, which will be mappe
 **Returns:**
 ```javascript
 {
-  status: 201,
+  status: 200,
   result: { ... } // the entry you were looking for
 }
 ```
@@ -232,7 +232,7 @@ Side note: the `params` object will be merged into the body before updating.
 **Returns:**
 ```javascript
 {
-  status: 201,
+  status: 200,
   result: { ... } // the updated entry
 }
 ```
@@ -279,7 +279,7 @@ Side note: The `params` object should contain an `id` field, which will be mappe
 **Returns:**
 ```javascript
 {
-  status: 201,
+  status: 200,
   result: { ... } // the removed entry
 }
 ```
@@ -325,8 +325,8 @@ Side note: In this case, the `params` object should not contain an `id` field.
 **Returns:**
 ```javascript
 {
-  status: 201,
-  result: {} // the new entry inserted into the db.
+  status: 200,
+  result: {} // a summary about how many elements are actually deleted.
 }
 ```
 
