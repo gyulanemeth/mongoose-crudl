@@ -352,7 +352,7 @@ try {
   console.log(response.status) // the HTTP status code of the operation: 200
   console.log(response.result) // the entry you removed
 
-  deleteMany(ExampleModel, { ref: response.result.ref }) // you probably don't want to await for the results, since the main entry is already removed.
+  deleteMany(ExampleModel2, { ref: response.result.ref }) // you probably don't want to await for the results, since the main entry is already removed.
 } catch (e) {
   console.log(e)
 }
