@@ -1,6 +1,6 @@
 import NotFoundError from './errors/NotFoundError.js'
 
-export default async function updateOne (Model, params, body) {
+export default async function patchOne (Model, params, body) {
   const paramsCopy = Object.assign({}, params)
   const _id = paramsCopy.id
   delete paramsCopy.id
