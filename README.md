@@ -12,7 +12,7 @@ npm i --save mongoose-crudl
 
 The following functions are exported in the `index.js` file:
 ```javascript
-import { list, createOne, readOne updateOne, deleteOne, deleteMany } from 'mongoose-crudl'
+import { list, createOne, readOne updateOne, patchOne, deleteOne, deleteMany } from 'mongoose-crudl'
 ```
 
 These functions are asynchronous by nature, so they return a Javascript promise.
@@ -254,6 +254,57 @@ import ExampleModel from './your/mongoose/model.js'
 
 try {
   const response = await updateOne(ExampleModel, params, body)
+  
+  console.log(response.status) // the HTTP status code of the operation: 200
+  console.log(response.result) // the updated entry
+} catch (e) {
+  console.log(e)
+}
+```
+
+
+
+### patchOne(Model, params, body)
+
+Patches an entry in your db.
+
+**Parameters:**
+Name | Type | Description
+--- | --- | ---
+Model | Mongoose model | A Mongoose model.
+params | Object | A [params object](#params).
+body | Object | The data which will be inserted to the db.
+
+Side note: The `params` object should contain an `id` field, which will be mapped to the default `_id` field of MongoDB.
+
+Side note: the `params` object will be merged into the body before updating.
+
+
+**Returns:**
+```javascript
+{
+  status: 200,
+  result: { ... } // the updated entry
+}
+```
+
+**Throws:**
+
+- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
+- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js) whenever the item described by the params is not found.
+- [Mongoose validation error](https://mongoosejs.com/docs/validation.html#validation-errors)
+
+**Example:**
+
+```javascript
+import { patchOne } from 'mongoose-crudl'
+
+import ExampleModel from './your/mongoose/model.js'
+
+...
+
+try {
+  const response = await patchOne(ExampleModel, params, body)
   
   console.log(response.status) // the HTTP status code of the operation: 200
   console.log(response.result) // the updated entry
