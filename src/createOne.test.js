@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
+import { ValidationError } from 'standard-api-errors'
 
 import { createOne } from './index.js'
 
@@ -26,7 +27,7 @@ describe('createOne', () => {
   test('Error: Mongoose Validation', async () => {
     await expect(createOne(TestModel))
       .rejects
-      .toThrow(new Error('Test validation failed: name: Path `name` is required.'))
+      .toThrow(new ValidationError('Test validation failed: name: Path `name` is required.'))
   })
 
   test('Success', async () => {

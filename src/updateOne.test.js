@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
+import { ValidationError, NotFoundError } from 'standard-api-errors'
 
 import { updateOne } from './index.js'
 
@@ -31,7 +32,7 @@ describe('updateOne', () => {
 
     await expect(updateOne(TestModel, { id: test._id }, { name: 'test2' }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}"} is not found.`))
   })
 
   test('Error: Not found by params', async () => {
@@ -41,7 +42,7 @@ describe('updateOne', () => {
 
     await expect(updateOne(TestModel, { refId, id: test._id }, { name: 'test2' }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
   })
 
   test('Error: Mongoose Validation', async () => {
@@ -51,7 +52,7 @@ describe('updateOne', () => {
 
     await expect(updateOne(TestModel, { refId, id: test._id }, { name2: 'test2' }))
       .rejects
-      .toThrow(new Error('Test validation failed: name: Path `name` is required.'))
+      .toThrow(new ValidationError('Test validation failed: name: Path `name` is required.'))
   })
 
   test('Success by id', async () => {

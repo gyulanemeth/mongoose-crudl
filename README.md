@@ -94,8 +94,7 @@ query.limit | Number | The maximum number of items in the result. (See [Mongoose
 ```
 
 **Throws:**
-
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
+ - [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
 
 **Example:**
 ```javascript
@@ -140,8 +139,8 @@ Note: the `params` object will be merged into the body before inserting.
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
-- [Mongoose validation error](https://mongoosejs.com/docs/validation.html#validation-errors)
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
+- [ValidationError](https://www.npmjs.com/package/standard-api-errors#validationerror)
 
 **Example:**
 
@@ -189,8 +188,8 @@ Side note: The `params` object should contain an `id` field, which will be mappe
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
-- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js) whenever the item described by the params is not found.
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
+- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js)
 
 **Example:**
 
@@ -239,9 +238,9 @@ Side note: the `params` object will be merged into the body before updating.
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
-- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js) whenever the item described by the params is not found.
-- [Mongoose validation error](https://mongoosejs.com/docs/validation.html#validation-errors)
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
+- [NotFoundError](https://www.npmjs.com/package/standard-api-errors#notfounderror)
+- [ValidationError](https://www.npmjs.com/package/standard-api-errors#validationerror)
 
 **Example:**
 
@@ -290,9 +289,9 @@ Side note: the `params` object will be merged into the body before updating.
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
-- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js) whenever the item described by the params is not found.
-- [Mongoose validation error](https://mongoosejs.com/docs/validation.html#validation-errors)
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
+- [NotFoundError](https://www.npmjs.com/package/standard-api-errors#notfounderror)
+- [ValidationError](https://www.npmjs.com/package/standard-api-errors#validationerror)
 
 **Example:**
 
@@ -337,8 +336,8 @@ Side note: The `params` object should contain an `id` field, which will be mappe
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
-- [NotFoundError](https://github.com/gyulanemeth/mongoose-crudl/blob/master/src/errors/NotFoundError.js) whenever the item described by the params is not found.
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
+- [NotFoundError](https://www.npmjs.com/package/standard-api-errors#notfounderror)
 
 **Example:**
 
@@ -383,7 +382,7 @@ Side note: In this case, the `params` object should not contain an `id` field.
 
 **Throws:**
 
-- Connection-related [Mongoose](https://mongoosejs.com/docs/api/error.html) or [MongoDB](https://github.com/mongodb/node-mongodb-native/blob/HEAD/etc/notes/errors.md) errors.
+- [DatabaseConnectionError](https://www.npmjs.com/package/standard-api-errors#databaseconnectionerror)
 
 **Example:**
 
