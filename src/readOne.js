@@ -1,20 +1,28 @@
-import NotFoundError from './errors/NotFoundError.js'
+import { DatabaseConnectionError, NotFoundError } from 'standard-api-errors'
 
 export default async function readOne (Model, params, query = {}) {
-  const select = query.select
+  try {
+    const select = query.select
 
-  const paramsCopy = Object.assign({}, params)
-  const _id = paramsCopy.id
-  delete paramsCopy.id
+    const paramsCopy = Object.assign({}, params)
+    const _id = paramsCopy.id
+    delete paramsCopy.id
 
-  const filter = { _id, ...paramsCopy }
-  const result = await Model.findOne(filter).select(select)
-  if (!result) {
-    throw new NotFoundError(Model, filter)
-  }
+    const filter = { _id, ...paramsCopy }
+    const result = await Model.findOne(filter).select(select)
+    if (!result) {
+      throw new NotFoundError(`${Model.modelName} with ${JSON.stringify(filter)} is not found.`)
+    }
 
-  return {
-    status: 200,
-    result: result.toObject()
+    return {
+      status: 200,
+      result: result.toObject()
+    }
+  } catch (e) {
+    if (e instanceof NotFoundError) {
+      throw e
+    }
+
+    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
   }
 }

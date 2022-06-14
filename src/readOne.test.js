@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
+import { NotFoundError } from 'standard-api-errors'
 
 import { readOne } from './index.js'
 
@@ -31,7 +32,7 @@ describe('readOne', () => {
 
     await expect(readOne(TestModel, { id: test._id }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}"} is not found.`))
   })
 
   test('Error: Not found by params', async () => {
@@ -41,7 +42,7 @@ describe('readOne', () => {
 
     await expect(readOne(TestModel, { refId, id: test._id }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
   })
 
   test('Success by id', async () => {

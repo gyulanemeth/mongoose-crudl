@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
 
+import { NotFoundError } from 'standard-api-errors'
+
 import { deleteOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
@@ -31,7 +33,7 @@ describe('deleteOne', () => {
 
     await expect(deleteOne(TestModel, { id: test._id }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}"} is not found.`))
   })
 
   test('Error: Not found by params', async () => {
@@ -41,7 +43,7 @@ describe('deleteOne', () => {
 
     await expect(deleteOne(TestModel, { refId, id: test._id }))
       .rejects
-      .toThrow(new Error(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
+      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
   })
 
   test('Success by id', async () => {

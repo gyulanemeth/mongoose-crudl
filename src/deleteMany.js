@@ -1,10 +1,16 @@
+import { DatabaseConnectionError } from 'standard-api-errors'
+
 export default async function deleteMany (Model, params) {
-  const filter = Object.assign({}, params)
+  try {
+    const filter = Object.assign({}, params)
 
-  const result = await Model.deleteMany(filter)
+    const result = await Model.deleteMany(filter)
 
-  return {
-    status: 200,
-    result: result
+    return {
+      status: 200,
+      result: result
+    }
+  } catch (e) {
+    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
   }
 }
