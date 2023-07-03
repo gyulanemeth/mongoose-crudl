@@ -25,42 +25,42 @@ describe('DatabaseConnectionError', () => {
   test('list', async () => {
     await expect(list(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('createOne', async () => {
     await expect(createOne(TestModel, { name: 'test' }))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('readOne', async () => {
     await expect(readOne(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('updateOne', async () => {
     await expect(updateOne(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('patchOne', async () => {
     await expect(patchOne(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('deleteOne', async () => {
     await expect(deleteOne(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 
   test('deleteMany', async () => {
     await expect(deleteMany(TestModel))
       .rejects
-      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: MongoClient must be connected to perform this operation'))
+      .toThrow(new DatabaseConnectionError('MongoNotConnectedError: Client must be connected before running operations'))
   })
 })
