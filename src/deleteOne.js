@@ -1,13 +1,13 @@
 import { DatabaseConnectionError, NotFoundError } from 'standard-api-errors'
 
-export default async function deleteOne (Model, params) {
+export default async function deleteOne (Model, params, select = {}) {
   try {
     const paramsCopy = Object.assign({}, params)
     const _id = paramsCopy.id
     delete paramsCopy.id
 
     const filter = { _id, ...paramsCopy }
-    const originalItem = await Model.findOne(filter)
+    const originalItem = await Model.findOne(filter).select(select)
     if (!originalItem) {
       throw new NotFoundError(`${Model.modelName} with ${JSON.stringify(filter)} is not found.`)
     }
