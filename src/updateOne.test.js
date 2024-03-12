@@ -7,7 +7,7 @@ import { updateOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
-const TestModel = mongoose.model('Test', new mongoose.Schema({
+const TestModel = mongoose.model('TestUpdateOne', new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   refId: { type: mongoose.Types.ObjectId, required: false }
 }, { timestamps: true }))
@@ -25,6 +25,19 @@ describe('updateOne', () => {
     await mongooseMemoryServer.stop()
   })
 
+  // for some reason, the name index is only working if this test is run first... but it works at the second place in createOne.test.js... weird.
+  test('Error: Mongoose Duplicate Key', async () => {
+    const test = new TestModel({ name: 'test' })
+    await test.save()
+
+    const test2 = new TestModel({ name: 'test 2' })
+    await test2.save()
+
+    await expect(updateOne(TestModel, { id: test2._id }, { name: 'test' }))
+      .rejects
+      .toThrow(new ConflictError('Plan executor error during findAndModify :: caused by :: E11000 duplicate key error collection: test-db.testupdateones index: name_1 dup key: { name: "test" }'))
+  })
+
   test('Error: Not found by id', async () => {
     const test = new TestModel({ name: 'test' })
     await test.save()
@@ -33,7 +46,7 @@ describe('updateOne', () => {
 
     await expect(updateOne(TestModel, { id: test._id }, { name: 'test2' }))
       .rejects
-      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}"} is not found.`))
+      .toThrow(new NotFoundError(`TestUpdateOne with {"_id":"${test._id.toString()}"} is not found.`))
   })
 
   test('Error: Not found by params', async () => {
@@ -43,7 +56,7 @@ describe('updateOne', () => {
 
     await expect(updateOne(TestModel, { refId, id: test._id }, { name: 'test2' }))
       .rejects
-      .toThrow(new NotFoundError(`Test with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
+      .toThrow(new NotFoundError(`TestUpdateOne with {"_id":"${test._id.toString()}","refId":"${refId}"} is not found.`))
   })
 
   test('Error: Mongoose Validation', async () => {
@@ -51,23 +64,9 @@ describe('updateOne', () => {
     const test = new TestModel({ refId, name: 'test' })
     await test.save()
 
-    await expect(updateOne(TestModel, { refId, id: test._id }, { name: undefined, name2: 'test2' }))
+    await expect(updateOne(TestModel, { refId, id: test._id }, { name2: 'test2' }))
       .rejects
-      .toThrow(new ValidationError('Test validation failed: name: Path `name` is required.'))
-  })
-
-  test('Error: Mongoose Duplicate Key', async () => {
-    const refId = new mongoose.Types.ObjectId()
-    const test = new TestModel({ refId, name: 'test' })
-    await test.save()
-
-    const refId2 = new mongoose.Types.ObjectId()
-    const test2 = new TestModel({ refId2, name: 'test' })
-    await test2.save()
-
-    await expect(updateOne(TestModel, { id: test2._id }, { name: 'test' }))
-      .rejects
-      .toThrow(new ConflictError('E11000 duplicate key error collection: test-db.tests index: name_1 dup key: { name: "test" }'))
+      .toThrow(new ValidationError('TestUpdateOne validation failed: name: Path `name` is required.'))
   })
 
   test('Success by id', async () => {

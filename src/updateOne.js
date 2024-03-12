@@ -16,7 +16,7 @@ export default async function updateOne (Model, params, body) {
     const newItem = new Model(newData)
     await newItem.validate()
 
-    const result = newItem.save()
+    const result = await Model.findByIdAndUpdate(_id, newData, { new: true })
 
     return {
       status: 200,

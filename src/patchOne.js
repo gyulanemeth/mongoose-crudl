@@ -1,4 +1,4 @@
-import { InternalServerError, NotFoundError, ValidationError } from 'standard-api-errors'
+import { InternalServerError, ConflictError, NotFoundError, ValidationError } from 'standard-api-errors'
 
 export default async function patchOne (Model, params, body) {
   try {
@@ -25,6 +25,10 @@ export default async function patchOne (Model, params, body) {
   } catch (e) {
     if (e instanceof NotFoundError) {
       throw e
+    }
+
+    if (e.code === 11000) {
+      throw new ConflictError(e.message)
     }
 
     if (e.name === 'ValidationError' || e.name === 'CastError') {
