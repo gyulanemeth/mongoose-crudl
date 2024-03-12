@@ -1,19 +1,20 @@
+import { describe, test, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
-import { ValidationError, NotFoundError } from 'standard-api-errors'
+import { ValidationError, ConflictError, NotFoundError } from 'standard-api-errors'
 
 import { updateOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
 const TestModel = mongoose.model('Test', new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   refId: { type: mongoose.Types.ObjectId, required: false }
 }, { timestamps: true }))
 
 describe('updateOne', () => {
   beforeAll(async () => {
-    await mongooseMemoryServer.start()
+    await mongooseMemoryServer.start({ storageEngine: 'wiredTiger' })
     await mongooseMemoryServer.connect('test-db')
   })
   afterEach(async () => {
@@ -50,9 +51,23 @@ describe('updateOne', () => {
     const test = new TestModel({ refId, name: 'test' })
     await test.save()
 
-    await expect(updateOne(TestModel, { refId, id: test._id }, { name2: 'test2' }))
+    await expect(updateOne(TestModel, { refId, id: test._id }, { name: undefined, name2: 'test2' }))
       .rejects
       .toThrow(new ValidationError('Test validation failed: name: Path `name` is required.'))
+  })
+
+  test('Error: Mongoose Duplicate Key', async () => {
+    const refId = new mongoose.Types.ObjectId()
+    const test = new TestModel({ refId, name: 'test' })
+    await test.save()
+
+    const refId2 = new mongoose.Types.ObjectId()
+    const test2 = new TestModel({ refId2, name: 'test' })
+    await test2.save()
+
+    await expect(updateOne(TestModel, { id: test2._id }, { name: 'test' }))
+      .rejects
+      .toThrow(new ConflictError('E11000 duplicate key error collection: test-db.tests index: name_1 dup key: { name: "test" }'))
   })
 
   test('Success by id', async () => {

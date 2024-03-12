@@ -1,4 +1,4 @@
-import { DatabaseConnectionError, NotFoundError } from 'standard-api-errors'
+import { InternalServerError, NotFoundError } from 'standard-api-errors'
 
 export default async function readOne (Model, params, query = {}) {
   try {
@@ -23,6 +23,6 @@ export default async function readOne (Model, params, query = {}) {
       throw e
     }
 
-    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
+    throw new InternalServerError(`${e.name}: ${e.message}`)
   }
 }

@@ -1,4 +1,4 @@
-import { DatabaseConnectionError } from 'standard-api-errors'
+import { InternalServerError } from 'standard-api-errors'
 
 export default async function list (Model, params = {}, query = {}) {
   try {
@@ -31,6 +31,6 @@ export default async function list (Model, params = {}, query = {}) {
       }
     }
   } catch (e) {
-    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
+    throw new InternalServerError(`${e.name}: ${e.message}`)
   }
 }
