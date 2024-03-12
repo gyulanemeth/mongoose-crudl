@@ -1,19 +1,20 @@
+import { describe, test, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
-import { ValidationError } from 'standard-api-errors'
+import { ConflictError, ValidationError } from 'standard-api-errors'
 
 import { createOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
 const TestModel = mongoose.model('Test', new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   refId: { type: mongoose.Types.ObjectId, required: false }
 }, { timestamps: true }))
 
 describe('createOne', () => {
   beforeAll(async () => {
-    await mongooseMemoryServer.start()
+    await mongooseMemoryServer.start({ storageEngine: 'wiredTiger' })
     await mongooseMemoryServer.connect('test-db')
   })
   afterEach(async () => {
@@ -28,6 +29,16 @@ describe('createOne', () => {
     await expect(createOne(TestModel))
       .rejects
       .toThrow(new ValidationError('Test validation failed: name: Path `name` is required.'))
+  })
+
+  test('Error: Mongoose Duplicate Key', async () => {
+    await createOne(TestModel, null, { name: 'test' })
+
+    console.log('pina indices yo', await TestModel.listIndexes())
+
+    await expect(createOne(TestModel, null, { name: 'test' }))
+      .rejects
+      .toThrow(new ConflictError('E11000 duplicate key error collection: test-db.tests index: name_1 dup key: { name: "test" }'))
   })
 
   test('Success', async () => {

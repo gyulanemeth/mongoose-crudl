@@ -1,13 +1,14 @@
+import { describe, test, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import mongoose from 'mongoose'
 import createMongooseMemoryServer from 'mongoose-memory'
-import { ValidationError, NotFoundError } from 'standard-api-errors'
+import { ValidationError, ConflictError, NotFoundError } from 'standard-api-errors'
 
 import { patchOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
 const TestModel = mongoose.model('Test', new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   anotherParam: { type: String },
   refId: { type: mongoose.Types.ObjectId, required: false }
 }, { timestamps: true }))
@@ -23,6 +24,18 @@ describe('patchOne', () => {
   afterAll(async () => {
     await mongooseMemoryServer.disconnect()
     await mongooseMemoryServer.stop()
+  })
+
+  test('Error: Mongoose Duplicate Key', async () => {
+    const test = new TestModel({ name: 'test' })
+    await test.save()
+
+    const test2 = new TestModel({ name: 'test 2' })
+    await test2.save()
+
+    await expect(patchOne(TestModel, { id: test2._id }, { name: 'test' }))
+      .rejects
+      .toThrow(new ConflictError('Plan executor error during findAndModify :: caused by :: E11000 duplicate key error collection: test-db.tests index: name_1 dup key: { name: "test" }'))
   })
 
   test('Error: Not found by id', async () => {

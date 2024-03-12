@@ -27,35 +27,16 @@
   "scripts": {
     "lint": "npx standard",
     "lint-fix": "npx standard --fix",
-    "test": "npm run lint && node --experimental-vm-modules node_modules/jest/bin/jest.js --collect-coverage",
-    "test-brk": "node --inspect-brk --experimental-vm-modules node_modules/jest/bin/jest.js"
-  },
-  "standard": {
-    "env": [
-      "jest"
-    ]
-  },
-  "jest": {
-    "testEnvironment": "jest-environment-node",
-    "transform": {},
-    "verbose": true,
-    "testTimeout": 5000,
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    }
+    "test": "npm run lint && npx vitest run --coverage -- --check-coverage --lines 100 --functions 100 --branches 100 --statements 100"
   },
   "dependencies": {
     "standard-api-errors": "^1.0.0"
   },
   "devDependencies": {
-    "jest": "^27.5.1",
+    "vitest": "^0.28.2",
+    "@vitest/coverage-c8": "^0.28.2",
     "mongoose": "^6.3.0",
-    "mongoose-memory": "^0.0.2",
+    "mongoose-memory": "1.1.0",
     "standard": "^16.0.4"
   },
   "author": "GYN",

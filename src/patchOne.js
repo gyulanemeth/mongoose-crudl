@@ -1,4 +1,4 @@
-import { DatabaseConnectionError, NotFoundError, ValidationError } from 'standard-api-errors'
+import { InternalServerError, ConflictError, NotFoundError, ValidationError } from 'standard-api-errors'
 
 export default async function patchOne (Model, params, body, select) {
   try {
@@ -27,10 +27,14 @@ export default async function patchOne (Model, params, body, select) {
       throw e
     }
 
+    if (e.code === 11000) {
+      throw new ConflictError(e.message)
+    }
+
     if (e.name === 'ValidationError' || e.name === 'CastError') {
       throw new ValidationError(e.message)
     }
 
-    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
+    throw new InternalServerError(`${e.name}: ${e.message}`)
   }
 }

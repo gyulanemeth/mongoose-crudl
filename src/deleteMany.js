@@ -1,4 +1,4 @@
-import { DatabaseConnectionError } from 'standard-api-errors'
+import { InternalServerError } from 'standard-api-errors'
 
 export default async function deleteMany (Model, params) {
   try {
@@ -11,6 +11,6 @@ export default async function deleteMany (Model, params) {
       result: result
     }
   } catch (e) {
-    throw new DatabaseConnectionError(`${e.name}: ${e.message}`)
+    throw new InternalServerError(`${e.name}: ${e.message}`)
   }
 }
