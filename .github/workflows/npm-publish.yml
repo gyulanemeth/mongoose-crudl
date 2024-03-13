@@ -1,4 +1,4 @@
-name: Build and deploy to npm
+name: Build & deploy to NPM
 
 on:
   push:
@@ -7,16 +7,27 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 20
-      - run: npm i
-      - run: npm test
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          access: public
-          token: ${{ secrets.NPM_TOKEN }}
- 
+    - uses: actions/checkout@v2
+      with:
+        ref: 'master'
+    
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.x'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: npm i
+
+    - name: Run tests
+      run: npm test
+
+    - name: Publish to npm
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
