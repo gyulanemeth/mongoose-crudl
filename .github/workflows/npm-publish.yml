@@ -1,4 +1,4 @@
-name: Build & deploy to NPM
+name: Node.js CI
 
 on:
   push:
@@ -11,18 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: 'master'
     
     - name: Use Node.js 20.x
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
 
     - name: Install dependencies
-      run: npm i
+      run: npm ci
 
     - name: Run tests
       run: npm test
