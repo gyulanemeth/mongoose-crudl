@@ -34,8 +34,6 @@ describe('createOne', () => {
   test('Error: Mongoose Duplicate Key', async () => {
     await createOne(TestModel, null, { name: 'test' })
 
-    console.log('pina indices yo', await TestModel.listIndexes())
-
     await expect(createOne(TestModel, null, { name: 'test' }))
       .rejects
       .toThrow(new ConflictError('E11000 duplicate key error collection: test-db.tests index: name_1 dup key: { name: "test" }'))
