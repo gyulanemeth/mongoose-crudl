@@ -6,7 +6,7 @@ export default async function list (Model, params = {}, query = {}) {
     const select = query.select || {}
     const sort = query.sort || { createdAt: -1 }
     let skip = query.skip || 0
-    let limit = query.limit || 10
+    let limit = query.limit === 'unlimited' ? undefined : (query.limit || 10)
 
     Object.assign(filter, params)
 

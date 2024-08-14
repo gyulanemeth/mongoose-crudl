@@ -106,7 +106,7 @@ describe('list', () => {
     const test3 = new TestModel({ name: 'test3', refId })
     await test3.save()
 
-    const res = await list(TestModel, { refId }, { sort: { createdAt: 1 } })
+    const res = await list(TestModel, { refId }, { sort: { createdAt: 1 }, limit: 'unlimited' })
 
     expect(res).toEqual({
       status: 200,
