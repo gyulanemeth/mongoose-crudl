@@ -32,6 +32,7 @@ describe('createOne', () => {
   })
 
   test('Error: Mongoose Duplicate Key', async () => {
+    TestModel.createIndexes()
     await createOne(TestModel, null, { name: 'test' })
 
     await expect(createOne(TestModel, null, { name: 'test' }))
