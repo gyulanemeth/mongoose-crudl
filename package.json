@@ -1,6 +1,6 @@
 {
   "name": "mongoose-crudl",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "CRUDL operations with Mongoose. (Create, Read, Update, Delete, List)",
   "type": "module",
   "main": "src/index.js",

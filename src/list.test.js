@@ -106,7 +106,7 @@ describe('list', () => {
     const test3 = new TestModel({ name: 'test3', refId })
     await test3.save()
 
-    const res = await list(TestModel, { refId }, { sort: { createdAt: 1 } })
+    const res = await list(TestModel, { refId }, { sort: { createdAt: 1 }, limit: 'unlimited' })
 
     expect(res).toEqual({
       status: 200,
@@ -132,6 +132,18 @@ describe('list', () => {
         count: 2
       }
     })
+  })
+
+  test('unlimited', async () => {
+    const refId = new mongoose.Types.ObjectId()
+
+    for (let i = 0; i < 11; i++) {
+      const test = new TestModel({ name: 'test' + i, refId })
+      await test.save()
+    }
+
+    const res = await list(TestModel, { refId }, { limit: 'unlimited' })
+    expect(res.result.items.length).toBe(11)
   })
 
   test('sort with skip & limit', async () => {
