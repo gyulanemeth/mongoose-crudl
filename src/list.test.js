@@ -134,6 +134,18 @@ describe('list', () => {
     })
   })
 
+  test('unlimited', async () => {
+    const refId = new mongoose.Types.ObjectId()
+
+    for (let i = 0; i < 11; i++) {
+      const test = new TestModel({ name: 'test' + i, refId })
+      await test.save()
+    }
+
+    const res = await list(TestModel, { refId }, { limit: 'unlimited' })
+    expect(res.result.items.length).toBe(11)
+  })
+
   test('sort with skip & limit', async () => {
     const refId = new mongoose.Types.ObjectId()
     const refId2 = new mongoose.Types.ObjectId()
