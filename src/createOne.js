@@ -1,9 +1,12 @@
 import { ConflictError, InternalServerError, ValidationError } from 'standard-api-errors'
 
-export default async function createOne (Model, params = {}, body = {}) {
+export default async function createOne (Model, params = {}, body = {}, populate) {
   try {
     const item = new Model({ ...body, ...params })
-    const result = await item.save()
+    let result = await item.save()
+    if (populate) {
+      result = await result.populate(populate)
+    }
     return {
       status: 201,
       result: result.toObject()

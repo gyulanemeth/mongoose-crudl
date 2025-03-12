@@ -7,9 +7,13 @@ import { readOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
+const Test2Model = mongoose.model('Test2', new mongoose.Schema({
+  name: { type: String, required: true, unique: true }
+}, { timestamps: true }))
+
 const TestModel = mongoose.model('Test', new mongoose.Schema({
   name: { type: String, required: true },
-  refId: { type: mongoose.Types.ObjectId, required: false }
+  refId: { type: mongoose.Types.ObjectId, ref: 'Test2', required: false }
 }, { timestamps: true }))
 
 describe('readOne', () => {
@@ -62,6 +66,19 @@ describe('readOne', () => {
         updatedAt: test.updatedAt
       }
     })
+  })
+
+  test('Success with populate', async () => {
+    const test1 = new Test2Model({ name: 'test2' })
+    await test1.save()
+
+    const test = new TestModel({ name: 'test', refId: test1._id })
+    await test.save()
+
+    const res = await readOne(TestModel, { id: test._id }, { populate: 'refId' })
+
+    expect(res.status).toBe(200)
+    expect(res.result.refId.name).toBe('test2')
   })
 
   test('Success by params', async () => {

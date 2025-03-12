@@ -7,9 +7,13 @@ import { createOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
+const Test2Model = mongoose.model('Test2', new mongoose.Schema({
+  name: { type: String, required: true, unique: true }
+}, { timestamps: true }))
+
 const TestModel = mongoose.model('Test', new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  refId: { type: mongoose.Types.ObjectId, required: false }
+  refId: { type: mongoose.Types.ObjectId, ref: 'Test2', required: false }
 }, { timestamps: true }))
 
 describe('createOne', () => {
@@ -45,6 +49,21 @@ describe('createOne', () => {
 
     expect(res.status).toBe(201)
     expect(res.result.name).toBe('test')
+
+    const entry = await TestModel.findById(res.result._id)
+
+    expect(entry.name).toBe(res.result.name)
+  })
+
+  test('Success with populate', async () => {
+    const test1 = new Test2Model({ name: 'test2' })
+    await test1.save()
+
+    const res = await createOne(TestModel, null, { name: 'test', refId: test1._id }, 'refId')
+
+    expect(res.status).toBe(201)
+    expect(res.result.name).toBe('test')
+    expect(res.result.refId.name).toBe('test2')
 
     const entry = await TestModel.findById(res.result._id)
 

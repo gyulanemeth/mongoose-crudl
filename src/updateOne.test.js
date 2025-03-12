@@ -7,9 +7,13 @@ import { updateOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
+const Test2Model = mongoose.model('Test2', new mongoose.Schema({
+  name: { type: String, required: true, unique: true }
+}, { timestamps: true }))
+
 const TestModel = mongoose.model('TestUpdateOne', new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  refId: { type: mongoose.Types.ObjectId, required: false }
+  refId: { type: mongoose.Types.ObjectId, ref: 'Test2', required: false }
 }, { timestamps: true }))
 
 describe('updateOne', () => {
@@ -76,6 +80,23 @@ describe('updateOne', () => {
     const res = await updateOne(TestModel, { id: test._id }, { name: 'renamed' })
 
     expect(res.result.name).toBe('renamed')
+
+    const entry = await TestModel.findById(test._id)
+
+    expect(entry.name).toBe('renamed')
+  })
+
+  test('Success by populate', async () => {
+    const test1 = new Test2Model({ name: 'test2' })
+    await test1.save()
+
+    const test = new TestModel({ name: 'test', refId: test1._id })
+    await test.save()
+
+    const res = await updateOne(TestModel, { id: test._id }, { name: 'renamed' }, 'refId')
+
+    expect(res.result.name).toBe('renamed')
+    expect(res.result.refId.name).toBe('test2')
 
     const entry = await TestModel.findById(test._id)
 

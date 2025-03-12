@@ -3,13 +3,14 @@ import { InternalServerError, NotFoundError } from 'standard-api-errors'
 export default async function readOne (Model, params, query = {}) {
   try {
     const select = query.select
+    const populate = query.populate
 
     const paramsCopy = Object.assign({}, params)
     const _id = paramsCopy.id
     delete paramsCopy.id
 
     const filter = { _id, ...paramsCopy }
-    const result = await Model.findOne(filter).select(select)
+    const result = await Model.findOne(filter).select(select).populate(populate).exec()
     if (!result) {
       throw new NotFoundError(`${Model.modelName} with ${JSON.stringify(filter)} is not found.`)
     }
