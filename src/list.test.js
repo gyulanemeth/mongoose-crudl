@@ -6,9 +6,13 @@ import { list } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
+const Test2Model = mongoose.model('Test2', new mongoose.Schema({
+  name: { type: String, required: true, unique: true }
+}, { timestamps: true }))
+
 const TestModel = mongoose.model('Test', new mongoose.Schema({
   name: { type: String, required: true },
-  refId: { type: mongoose.Types.ObjectId, required: false }
+  refId: { type: mongoose.Types.ObjectId, ref: 'Test2', required: false }
 }, { timestamps: true }))
 
 describe('list', () => {
@@ -294,5 +298,31 @@ describe('list', () => {
         count: 3
       }
     })
+  })
+
+  test('list with populate', async () => {
+    const refData = new Test2Model({ name: 'test2' })
+    await refData.save()
+
+    const test = new TestModel({ name: 'Apple', refId: refData._id })
+    await test.save()
+
+    const test2 = new TestModel({ name: 'Apple and Pear', refId: refData._id })
+    await test2.save()
+
+    const test3 = new TestModel({ name: 'Pear and APPLE', refId: refData._id })
+    await test3.save()
+
+    const test4 = new TestModel({ name: 'Carrot', refId: refData._id })
+    await test4.save()
+
+    const test5 = new TestModel({ name: 'app pear le', refId: refData._id })
+    await test5.save()
+
+    const res = await list(TestModel, undefined, undefined, 'refId')
+
+    expect(res.status).toBe(200)
+    expect(res.result.count).toBe(5)
+    expect(res.result.items[0].refId.name).toBe('test2')
   })
 })

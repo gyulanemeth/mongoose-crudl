@@ -1,6 +1,6 @@
 import { InternalServerError, ConflictError, NotFoundError, ValidationError } from 'standard-api-errors'
 
-export default async function patchOne (Model, params, body, select) {
+export default async function patchOne (Model, params, body, select, populate) {
   try {
     const paramsCopy = Object.assign({}, params)
     const _id = paramsCopy.id
@@ -16,7 +16,7 @@ export default async function patchOne (Model, params, body, select) {
     const newItem = new Model(newData)
     await newItem.validate()
 
-    const result = await Model.findByIdAndUpdate(_id, newData, { new: true }).select(select)
+    const result = await Model.findByIdAndUpdate(_id, newData, { new: true }).select(select).populate(populate).exec()
 
     return {
       status: 200,

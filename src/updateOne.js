@@ -1,6 +1,6 @@
 import { InternalServerError, NotFoundError, ConflictError, ValidationError } from 'standard-api-errors'
 
-export default async function updateOne (Model, params, body) {
+export default async function updateOne (Model, params, body, populate) {
   try {
     const paramsCopy = Object.assign({}, params)
     const _id = paramsCopy.id
@@ -16,7 +16,7 @@ export default async function updateOne (Model, params, body) {
     const newItem = new Model(newData)
     await newItem.validate()
 
-    const result = await Model.findByIdAndUpdate(_id, newData, { new: true })
+    const result = await Model.findByIdAndUpdate(_id, newData, { new: true }).populate(populate).exec()
 
     return {
       status: 200,

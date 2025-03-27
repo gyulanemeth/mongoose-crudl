@@ -7,10 +7,14 @@ import { patchOne } from './index.js'
 
 const mongooseMemoryServer = createMongooseMemoryServer(mongoose)
 
+const Test2Model = mongoose.model('Test2', new mongoose.Schema({
+  name: { type: String, required: true, unique: true }
+}, { timestamps: true }))
+
 const TestModel = mongoose.model('Test', new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   anotherParam: { type: String },
-  refId: { type: mongoose.Types.ObjectId, required: false }
+  refId: { type: mongoose.Types.ObjectId, ref: 'Test2', required: false }
 }, { timestamps: true }))
 
 describe('patchOne', () => {
@@ -71,6 +75,24 @@ describe('patchOne', () => {
 
   test('Success by id', async () => {
     const test = new TestModel({ name: 'test', anotherParam: 'should remain the same' })
+    await test.save()
+
+    const res = await patchOne(TestModel, { id: test._id }, { name: 'renamed' })
+
+    expect(res.result.name).toBe('renamed')
+    expect(res.result.anotherParam).toBe('should remain the same')
+
+    const entry = await TestModel.findById(test._id)
+
+    expect(entry.name).toBe('renamed')
+    expect(entry.anotherParam).toBe('should remain the same')
+  })
+
+  test('Success with populate', async () => {
+    const test1 = new Test2Model({ name: 'test2' })
+    await test1.save()
+
+    const test = new TestModel({ name: 'test', anotherParam: 'should remain the same', refId: test1._id })
     await test.save()
 
     const res = await patchOne(TestModel, { id: test._id }, { name: 'renamed' })

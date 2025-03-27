@@ -1,6 +1,6 @@
 import { InternalServerError } from 'standard-api-errors'
 
-export default async function list (Model, params = {}, query = {}) {
+export default async function list (Model, params = {}, query = {}, populate) {
   try {
     const filter = query.filter || {}
     const select = query.select || {}
@@ -19,7 +19,7 @@ export default async function list (Model, params = {}, query = {}) {
     }
 
     const [items, count] = await Promise.all([
-      Model.find(filter).select(select).sort(sort).skip(skip).limit(limit),
+      Model.find(filter).select(select).sort(sort).skip(skip).limit(limit).populate(populate).exec(),
       Model.count(filter)
     ])
 
