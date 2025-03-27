@@ -1,9 +1,8 @@
 import { InternalServerError, NotFoundError } from 'standard-api-errors'
 
-export default async function readOne (Model, params, query = {}) {
+export default async function readOne (Model, params, query = {}, populate) {
   try {
     const select = query.select
-    const populate = query.populate
 
     const paramsCopy = Object.assign({}, params)
     const _id = paramsCopy.id

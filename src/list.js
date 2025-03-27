@@ -1,11 +1,10 @@
 import { InternalServerError } from 'standard-api-errors'
 
-export default async function list (Model, params = {}, query = {}) {
+export default async function list (Model, params = {}, query = {}, populate) {
   try {
     const filter = query.filter || {}
     const select = query.select || {}
     const sort = query.sort || { createdAt: -1 }
-    const populate = query.populate
     let skip = query.skip || 0
     let limit = query.limit === 'unlimited' ? undefined : (query.limit || 10)
 

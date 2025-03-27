@@ -75,7 +75,7 @@ describe('readOne', () => {
     const test = new TestModel({ name: 'test', refId: test1._id })
     await test.save()
 
-    const res = await readOne(TestModel, { id: test._id }, { populate: 'refId' })
+    const res = await readOne(TestModel, { id: test._id }, undefined, 'refId')
 
     expect(res.status).toBe(200)
     expect(res.result.refId.name).toBe('test2')

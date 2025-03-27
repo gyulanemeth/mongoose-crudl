@@ -319,7 +319,7 @@ describe('list', () => {
     const test5 = new TestModel({ name: 'app pear le', refId: refData._id })
     await test5.save()
 
-    const res = await list(TestModel, undefined, { populate: 'refId' })
+    const res = await list(TestModel, undefined, undefined, 'refId')
 
     expect(res.status).toBe(200)
     expect(res.result.count).toBe(5)
